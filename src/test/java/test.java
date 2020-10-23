@@ -1,0 +1,106 @@
+import com.ordo.aop.MathDiv;
+import com.ordo.bean.Person;
+import com.ordo.config.*;
+import com.ordo.dao.BookDao;
+import com.ordo.ext.ExtConfig;
+import com.ordo.service.BookService;
+import com.ordo.tx.UserService;
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.util.Map;
+
+
+public class test {
+    public static void main(String[] args) {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
+        System.out.println("IOC容器创建完成...");
+        String[] beanDefinitionNames = context.getBeanDefinitionNames();
+        for(String name : beanDefinitionNames){
+            System.out.println(name);
+        }
+        Object person = context.getBean("person");
+    }
+
+    @Test
+    public void test(){
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
+        System.out.println("IOC容器创建完成...");
+
+        String[] beanDefinitionNames = context.getBeanDefinitionNames();
+        for(String name : beanDefinitionNames){
+            System.out.println(name);
+        }
+
+        System.out.println("-------分割线-------");
+
+        Object getPerson1 = context.getBean("bluePerson");
+        System.out.println(getPerson1);
+    }
+
+    @Test
+    public void test01(){
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Config2.class);
+        String[] beanDefinitionNames = context.getBeanDefinitionNames();
+        for(String s : beanDefinitionNames){
+            System.out.println(s);
+        }
+        Map<String, Person> beansOfType = context.getBeansOfType(Person.class);
+        System.out.println(beansOfType);
+    }
+
+    @Test
+    public void testLifeCycle(){
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(ConfigOfLifeCycle.class);
+        Object blue = context.getBean("blue");
+        Object blue1 = context.getBean("blue");
+        System.out.println(blue==blue1);
+        context.close();
+    }
+    @Test
+    public void testAutowired(){
+        AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(ConfigOfAutowire.class);
+        BookService bean = annotationConfigApplicationContext.getBean(BookService.class);
+        bean.print();
+        BookDao dao1 = (BookDao) annotationConfigApplicationContext.getBean("bookdao");
+        System.out.println(dao1);
+        System.out.println(bean);
+    }
+
+    @Test
+    public void testOfAop(){
+        AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(ConfigOfAOP.class);
+        String[] beanDefinitionNames = annotationConfigApplicationContext.getBeanDefinitionNames();
+        for (String beanDefinitionName : beanDefinitionNames) {
+            System.out.println(beanDefinitionName);
+        }
+
+        MathDiv div = (MathDiv) annotationConfigApplicationContext.getBean("div");
+        div.div(1,1);
+
+    }
+
+    @Test
+    public void testOfTX(){
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(ConfigOfTx.class);
+        UserService bean = context.getBean(UserService.class);
+        bean.insert();
+    }
+
+    @Test
+    public void testOfExt(){
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(ExtConfig.class);
+
+        context.close();
+    }
+    @Test
+    public void testFactoryBean(){
+        ApplicationContext context = new ClassPathXmlApplicationContext("dao.xml", "service.xml");
+        String[] names = context.getBeanDefinitionNames();
+        for(String n: names){
+            System.out.println(n);
+        }
+    }
+}
