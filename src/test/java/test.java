@@ -12,6 +12,7 @@ import com.ordo.service.BookService;
 import com.ordo.service.RegisterService;
 import com.ordo.tx.UserService;
 import org.junit.Test;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -135,6 +136,15 @@ public class test {
     public void TestOfPropertyRead(){
         AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(JdbcPropertiesConfiguration.class);
         System.out.println(ctx.getBean(JdbcProperties.class).toString());
+    }
+
+    @Test
+    public void TestOfBeanDefinitionRegistry(){
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(BeanDefinitionRegistryConfiguration.class);
+        System.out.println(context.getBean(Person.class));
+        BeanDefinition beanDefinition = context.getBeanDefinition("person");
+        System.out.println(beanDefinition);
+
     }
 
 }

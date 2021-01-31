@@ -2,10 +2,11 @@ package com.ordo.bean;
 
 
 import com.ordo.entity.colors.Blue;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Required;
 
 
-
+@Setter
 public class Person {
     private String name;
     private int age;
@@ -15,6 +16,10 @@ public class Person {
     public Person(String momo, int i) {
         this.name = momo;
         this.age = i;
+    }
+
+    public Person(){
+
     }
 
     public Person (Blue blue){
