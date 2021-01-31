@@ -2,8 +2,14 @@ import com.ordo.aop.MathDiv;
 import com.ordo.bean.Person;
 import com.ordo.config.*;
 import com.ordo.dao.BookDao;
+import com.ordo.entity.Boss;
 import com.ordo.ext.ExtConfig;
+import com.ordo.proxy.IPerson;
+import com.ordo.proxy.Man;
+import com.ordo.proxy.NormalHandler;
+import com.ordo.resource.JdbcProperties;
 import com.ordo.service.BookService;
+import com.ordo.service.RegisterService;
 import com.ordo.tx.UserService;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
@@ -29,15 +35,19 @@ public class test {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
         System.out.println("IOC容器创建完成...");
 
-        String[] beanDefinitionNames = context.getBeanDefinitionNames();
-        for(String name : beanDefinitionNames){
-            System.out.println(name);
-        }
+//        String[] beanDefinitionNames = context.getBeanDefinitionNames();
+//        for(String name : beanDefinitionNames){
+//            System.out.println(name);
+//        }
 
-        System.out.println("-------分割线-------");
+//        System.out.println("-------分割线-------");
 
-        Object getPerson1 = context.getBean("bluePerson");
-        System.out.println(getPerson1);
+//        Object getPerson1 = context.getBean("bluePerson");
+//        System.out.println(getPerson1);
+        RegisterService service = context.getBean(RegisterService.class);
+        service.register("momo");
+        context.close();
+        System.out.println("Ioc容器关闭");
     }
 
     @Test
@@ -103,4 +113,28 @@ public class test {
             System.out.println(n);
         }
     }
+    @Test
+    public void testJdkProxy(){
+        IPerson man = new Man();
+        IPerson proxyMan = (IPerson) new NormalHandler().getInstance(man);
+        proxyMan.say();
+    }
+
+    @Test
+    public void TestModuleImport(){
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(ModuleConfig.class);
+        String[] names = context.getBeanDefinitionNames();
+        for (String name : names) {
+            System.out.println(name);
+        }
+        Boss bean = context.getBean(Boss.class);
+        System.out.println(bean);
+
+    }
+    @Test
+    public void TestOfPropertyRead(){
+        AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(JdbcPropertiesConfiguration.class);
+        System.out.println(ctx.getBean(JdbcProperties.class).toString());
+    }
+
 }

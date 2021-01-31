@@ -2,27 +2,23 @@ package com.ordo.config;
 
 import com.ordo.bean.Person;
 import com.ordo.entity.colors.Blue;
-import com.ordo.filter.MyFilter;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ordo.service.RegisterService;
 import org.springframework.context.annotation.*;
-import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Indexed;
-import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 @Configuration
 //@ComponentScan(value = "com.ordo", excludeFilters ={
 //        @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = {Controller.class, Service.class, Repository.class}),
 ////        @ComponentScan.Filter(type = FilterType.CUSTOM, classes = {MyFilter.class})
 //})
-@Import({Blue.class})
+@ComponentScan("com.ordo.listener")
+@Import({Blue.class, RegisterService.class})
 
 public class Config {
     @Scope("singleton")
     @Bean("person")
-    @Lazy
+    @Lazy(value = false)
     public Person getPerson1(){
-        System.out.println("从容器中拿bean...");
+        System.out.println("getPerson1...");
         return new Person("momo",18);
     }
 

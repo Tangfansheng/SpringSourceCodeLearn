@@ -3,9 +3,8 @@ package com.ordo.bean;
 
 import com.ordo.entity.colors.Blue;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.stereotype.Repository;
 
-import javax.xml.ws.RequestWrapper;
+
 
 public class Person {
     private String name;
